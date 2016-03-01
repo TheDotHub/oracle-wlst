@@ -1,0 +1,19 @@
+---
+#
+- set_fact:
+    oracle_wlst_exec: "{{ oracle_wlst_oracle_home }}/wlserver/common/bin/wlst.sh"
+
+- lineinfile:
+    dest: "{{ oracle_wlst_exec }}"
+    regexp: ^JVM_ARGS=
+    line: JVM_ARGS="-Dprod.props.file='${WL_HOME}'/.product.properties ${WLST_PROPERTIES} ${JVM_D64} ${UTILS_MEM_ARGS} ${COMMON_JVM_ARGS} ${CONFIG_JVM_ARGS} -Djava.security.egd=file:///dev/urandom"
+
+- set_fact:
+    execute_command: "{{ oracle_wlst_exec }} {{ oracle_wlst_execute_file_path }} "
+
+- debug:
+    msg: "command '{{ execute_command }}' will be executed by {{ oracle_wslt_os_user }} user"
+
+- name: execute wlst
+  shell: "{{ execute_command }} >> /tmp/oracle-wlst.log"
+  when: oracle_wlst_execute
