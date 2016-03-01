@@ -1,62 +1,68 @@
 oracle-weblogic
 ===============
 
-Ansible role to install and configure Oracle Weblogic Server.
+Ansible role to execute the oracle weblogic scripting tool
 
 Requirements
 ------------
 
-Download oracle weblogic installers from http://www.oracle.com/technetwork/middleware/weblogic/downloads/index.html
+Oracle Weblogic
 
-Role Variables
---------------
+Variables 
+---------
 
-**defaults file for ansible-oracle-wls**
+  oracle_wlst_execute: yes
+  oracle_wlst_oracle_home: /opt/oraclefmw/product/oracle_home
+  oracle_wlst_create_domain: yes
+  oracle_wlst_create_domain_domains_home: /home/oraclefmw/config/domains #
+  oracle_wlst_create_domain_applications_home: /home/oraclefmw/config/apps #
+  oracle_wlst_create_domain_info:
+    name: local #
+    templates:
+      -
+        name: Basic WebLogic Server Domain
+        version: 10.3.6
+    adminserver:
+      name: AdminServer
+      listen_address:
+      listen_port: 7101
+    adminuser:
+      username: weblogic
+      password: welcome1
+    custom_datasources:
+      -
+        name: 
+        targets: AdminServer
+        jdbc_driver: oracle.jdbc.OracleDriver
+        jdbc_url: jdbc:oracle:thin:@local-osi-db:1521:FMWDB
+        schema_username: USER
+        schema_password: welcome1
+    filestores:
+        -
+          name: 
+          directory: 
+          targets: 
+    messaging:
+      jms_servers:
+        -
+          name: 
+          filestore: 
+          targets: 
+          jms_modules:
+            -
+              name: 
+              subdeployment: 
+              targets: 
+              connection_factories:
+                -
+                  name: 
+              queues:
+                -
+                  name: 
 
-*required if tag 'install' will be executed*
 
-- **oracle_weblogic_version**: 12c or 11g
-- **oracle_weblogic_release**: 12.2.1 or 10.3.6
-- **oracle_weblogic_quick_installation**: yes or no
+Credits
+-----------
 
-- **oracle_weblogic_install_type**: Complete with Examples # WebLogic Server, Coherence, Complete with Examples
-
-- **oracle_weblogic_jar**: JAR installer path
-
-**vars file for ansible-oracle-wls**
-
-*it is recommended to keep these vars by default*
-
-- **oracle_weblogic_user**: oraclefmw
-- **oracle_weblogic_group**: ofmwinstall
-- **oracle_weblogic_user_home**: /opt/oraclefmw
-
-- **oracle_weblogic_oracle_home**: /opt/oraclefmw/product/oracle_home
-- **oracle_weblogic_wls_home**: "{{ oracle_weblogic_oracle_home }}/wlserver"
-
-- **oracle_weblogic_inventory_directory**: /opt/oraclefmw/inventory
-- **oracle_weblogic_inventory_file**: /opt/oraclefmw/oraInst.loc
-
-- **oracle_weblogic_response_file**: "{{ oracle_weblogic_user_home }}/wls.rsp"
-
-- **oracle_weblogic_already_installed**: false
-
-Dependencies
-------------
-
-- jeqo.java
-
-Example Playbook
-----------------
-
-Go to tests/test.yml
-
-License
--------
-
-MIT
-
-Author Information
-------------------
-
-Jorge Quilcate (jorge.quilcate@sysco.no)
+- Jorge Quilcate (https://github.com/jeqo) for making the templates
+- Diego Otoya (https://github.com/TheDotHub) for fixing some vars
